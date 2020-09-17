@@ -1,1 +1,0 @@
-/Users/lukasmonch/.doom.d
