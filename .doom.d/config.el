@@ -37,9 +37,6 @@
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
 
-;; This determines the style of line numbers in effect. If set to `nil', line
-;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type t)
 
 
 
@@ -68,6 +65,7 @@
    ["#21242b" "#ff6c6b" "#98be65" "#ECBE7B" "#51afef" "#c678dd" "#46D9FF" "#bbc2cf"])
  '(custom-safe-themes
    (quote
+
     ("2f1518e906a8b60fac943d02ad415f1d8b3933a5a7f75e307e6e9a26ef5bf570" "99ea831ca79a916f1bd789de366b639d09811501e8c092c85b2cb7d697777f93" "bc836bf29eab22d7e5b4c142d201bcce351806b7c1f94955ccafab8ce5b20208" default)))
  '(fci-rule-color "#5B6268")
  '(jdee-db-active-breakpoint-face-colors (cons "#1B2229" "#51afef"))
@@ -107,29 +105,44 @@
  ;; If there is more than one, they won't work right.
  )
 
+;; additional packages (manual install)
+(add-load-path! "~/.doom.d/additional-packages")
+
+;; org-journal
+(setq org-journal-dir "~/org/journal/"
+      org-journal-date-format "%A, %d. %B %Y"
+      org-journal-file-type 'monthly)
+
+;; customize doom-dahsboard
+(setq fancy-splash-image (expand-file-name "blackhole-lines.png" doom-private-dir))
+(setq +doom-dashboard-menu-sections
+      '(("Create new Journal Entry"
+         :icon (all-the-icons-octicon "pencil" :face 'doom-dashboard-menu-title)
+         :action org-journal-new-entry)
+        ("Open project"
+         :icon (all-the-icons-octicon "briefcase" :face 'doom-dashboard-menu-title)
+         :action projectile-switch-project)))
+
 
 ;; treemacs theme
 (setq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
 (doom-themes-treemacs-config)
 
-(add-load-path! "~/.doom.d/additional-packages")
-
+;; projectile
 (setq projectile-project-search-path '("~/Documents/code"))
 
+;; magit
 (setq magit-git-executable "/usr/bin/git")
 
 ;; (scrolling) performance improvements (see https://github.com/hlissner/doom-emacs/issues/2217 )
-(use-package hl-line+
+(use-package! hl-line+
   :load-path "3rd"
   :config
   (hl-line-when-idle-interval 0.3)
   (toggle-hl-line-when-idle 1))
 
-(use-package display-line-numbers
-  :ensure nil
-  :init
-  (setq display-line-numbers-width-start t)
-  (global-display-line-numbers-mode))
+(setq display-line-numbers-type t)
+(setq display-line-numbers-width-start t)
 
 
 ;; key mappings
@@ -138,7 +151,6 @@
 
 (map! :map cider-mode-map
       "M-r" #'cider-eval-defun-at-point)
-
 
 (when (eq system-type 'darwin)
   ;; only execute on MacOS
@@ -165,7 +177,6 @@
   ;; keep $PATH from within the same as from user with exec-path-from-shell package
   (exec-path-from-shell-initialize)
 )
-
 
 ;; disable mouse
 (require 'disable-mouse)
